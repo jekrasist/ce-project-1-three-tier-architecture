@@ -1,24 +1,35 @@
-# Project 1: High-Availability Three-Tier Architecture
-**Date:** February 2026  
-**Engineer:** Ahmet Erdoğan 
+# AWS Three-Tier High-Availability Architecture
+**Author:** [Ahmet Erdoğan]
+**Project Status:** 🟢 Day 1 Complete (Infrastructure & Networking)
 
 ## 📌 Project Overview
-This project demonstrates a production-ready, three-tier web architecture deployed on AWS. The design focuses on **High Availability (HA)**, **Security**, and **Scalability**. It separates the presentation (ALB), application (EC2), and data (RDS) layers into distinct network tiers across multiple Availability Zones.
+This repository contains the architecture and configuration for a secure, highly available three-tier web application on AWS. The design ensures that each layer (Web, App, and Database) is physically and logically isolated to follow security best practices while maintaining zero downtime through a Multi-Availability Zone (Multi-AZ) deployment.
 
+## 🏗️ Architecture Design
+The infrastructure is divided into three distinct tiers across two Availability Zones (`us-east-1a` and `us-east-1b`):
 
+1. **Public Web Tier (ALB)**: Contains the Internet Gateway and Public Subnets. This is the only layer reachable from the public internet.
+2. **Private Application Tier**: Contains the EC2 instances. This layer is isolated and can only communicate with the Web Tier and the Database Tier.
+3. **Private Database Tier**: Contains the RDS PostgreSQL instance. This layer is the most restricted and has no internet access.
 
-## 🏗 Architecture Description
-* **Tier 1: Web/Load Balancer Tier** – Public subnets hosting an Application Load Balancer to manage incoming traffic.
-* **Tier 2: Application Tier** – Private subnets hosting an Auto Scaling Group of EC2 instances running a Node.js/Python application.
-* **Tier 3: Database Tier** – Private subnets hosting a Multi-AZ Amazon RDS instance, isolated from the internet.
+## 🛠️ Current Infrastructure (Day 1)
+The following networking components have been successfully deployed:
 
-## 🚀 How to Deploy
-1. **Network:** Create the VPC and 6 subnets (2 Public, 4 Private) using the CIDR blocks defined in `/config/vpc-config.txt`.
-2. **Database:** Launch the RDS instance in the private DB subnets.
-3. **Application:** Deploy the EC2 instances using the script in `/app/deploy.sh`.
-4. **Traffic:** Configure the ALB to route traffic to the application target group.
+| Component | Specification |
+| :--- | :--- |
+| **VPC CIDR** | 10.0.0.0/16 |
+| **Region** | us-east-1 (N. Virginia) |
+| **Public Subnets** | 10.0.1.0/24 (1a), 10.0.2.0/24 (1b) |
+| **Private App Subnets** | 10.0.3.0/24 (1a), 10.0.4.0/24 (1b) |
+| **Private DB Subnets** | 10.0.5.0/24 (1a), 10.0.6.0/24 (1b) |
+| **Gateways** | 1 Internet Gateway (IGW) attached to ce-project-vpc |
 
-## 🧪 Testing Instructions
-* **Health Check:** Access the ALB DNS name at `/health` to verify instance status.
-* **Failover:** Manually terminate one EC2 instance to observe the Auto Scaling Group's self-healing capability.
-* **Security:** Attempt to SSH into the DB tier from a public IP to verify network isolation (it should fail).
+## 🚦 Routing & Security
+- **Public Route Table**: Routes `0.0.0.0/0` traffic through the IGW.
+- **Private Route Table**: Local routing only (Isolation Mode enabled).
+- **Security Strategy**: All private subnets are isolated by default until Security Groups are configured in Day 2.
+
+## 📂 Repository Structure
+- `/architecture`: Contains the VPC Resource Map and Network Diagrams.
+- `/config`: Technical specifications including CIDR blocks and Subnet IDs.
+- `ARCHITECTURE.md`: Detailed rationale for the chosen design.
