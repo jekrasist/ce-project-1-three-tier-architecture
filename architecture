@@ -3,25 +3,14 @@
 ## 🏗️ Network Design Rationale
 For this project, I implemented a **Multi-Availability Zone (Multi-AZ)** architecture using `us-east-1a` and `us-east-1b`. 
 
-* **High Availability**: By distributing subnets across two distinct physical data centers, the application remains resilient against a single-point failure at the Availability Zone level.
-* **Scalable CIDR Strategy**: I chose a `/16` VPC CIDR (`10.0.0.0/16`) to provide a large address space, which I then segmented into `/24` subnets (256 IP addresses each). 
+* **High Availability**: Distributing subnets across two AZs ensures the app stays up if one data center goes down.
+* **Scalable CIDR Strategy**: I used a `10.0.0.0/16` VPC CIDR to allow for massive horizontal scaling. 
 
 ![Network Diagram](network-diagram.png)
 
-## 🔒 Security Strategy: The "Vault" Approach
-The security of this architecture is built on the principle of **Least Privilege** and **Network Isolation**.
+## 🔒 Security Strategy
+The security is built on **Network Isolation**.
 
-### 1. Tier Isolation
-* **Public Tier**: Contains the Application Load Balancer (ALB). It is the only tier with a route to the Internet Gateway.
-* **Application Tier**: Instances are placed in private subnets with no direct route to the internet. They are designed to receive traffic only from the ALB once Security Groups are finalized.
-* **Database Tier**: This is the most restricted layer. It is isolated in private subnets with no internet gateway access and is only reachable by the application tier.
-
-### 2. Routing Logic
-* **Public Route Table**: Explicitly associated with `public-1a` and `public-1b`, routing `0.0.0.0/0` traffic to the **Internet Gateway**.
-* **Private Route Table**: Used by the App and DB tiers. It only contains a "Local" route, ensuring that no traffic can enter or leave these subnets without passing through a security checkpoint.
-
-## 🚦 Traffic Flow
-1. **User Request**: Enters through the Internet Gateway.
-2. **ALB**: Receives traffic in the public tier and prepares to forward it to the App Tier.
-3. **Application**: Processes the request and queries the Database Tier.
-4. **Database**: Returns data to the App Tier over a secure, internal connection.
+* **Public Tier**: Only the ALB is internet-facing via the Internet Gateway.
+* **Private App Tier**: Isolated from the internet; only accessible via the Web Tier.
+* **Private DB Tier**: No internet route; only accessible via the App Tier.
