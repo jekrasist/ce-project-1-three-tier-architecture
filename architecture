@@ -6,7 +6,7 @@ For this project, I implemented a **Multi-Availability Zone (Multi-AZ)** archite
 * **High Availability**: Distributing subnets across two AZs ensures the app stays up if one data center goes down.
 * **Scalable CIDR Strategy**: I used a `10.0.0.0/16` VPC CIDR to allow for massive horizontal scaling. 
 
-![Network Diagram](see file named network-diagram.png)
+![Network Diagram](network-diagram.png)
 
 ## 🔒 Security Strategy
 The security is built on **Network Isolation**.
