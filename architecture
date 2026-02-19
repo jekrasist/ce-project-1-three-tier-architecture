@@ -4,9 +4,9 @@
 For this project, I implemented a **Multi-Availability Zone (Multi-AZ)** architecture using `us-east-1a` and `us-east-1b`. 
 
 * **High Availability**: By distributing subnets across two distinct physical data centers, the application remains resilient against a single-point failure at the Availability Zone level.
-* **Scalable CIDR Strategy**: I chose a `/16` VPC CIDR (`10.0.0.0/16`) to provide a large address space, which I then segmented into `/24` subnets (256 IP addresses each). This provides a balance between having enough addresses for horizontal scaling and maintaining clear logical separation for management.
+* **Scalable CIDR Strategy**: I chose a `/16` VPC CIDR (`10.0.0.0/16`) to provide a large address space, which I then segmented into `/24` subnets (256 IP addresses each). 
 
-[Image of 3-tier AWS architecture diagram showing two AZs]
+![Network Diagram](network-diagram.png)
 
 ## 🔒 Security Strategy: The "Vault" Approach
 The security of this architecture is built on the principle of **Least Privilege** and **Network Isolation**.
@@ -18,7 +18,7 @@ The security of this architecture is built on the principle of **Least Privilege
 
 ### 2. Routing Logic
 * **Public Route Table**: Explicitly associated with `public-1a` and `public-1b`, routing `0.0.0.0/0` traffic to the **Internet Gateway**.
-* **Private Route Table**: Used by the App and DB tiers. It only contains a "Local" route, ensuring that no traffic can enter or leave these subnets without passing through a security checkpoint (like a Load Balancer or NAT Gateway).
+* **Private Route Table**: Used by the App and DB tiers. It only contains a "Local" route, ensuring that no traffic can enter or leave these subnets without passing through a security checkpoint.
 
 ## 🚦 Traffic Flow
 1. **User Request**: Enters through the Internet Gateway.
