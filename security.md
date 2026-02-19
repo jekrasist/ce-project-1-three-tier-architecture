@@ -21,3 +21,26 @@ We utilize a **layered defense** strategy. Only the Web Tier (ALB) is exposed to
     * *Mitigation:* Enable AWS Shield Standard and set up WAF (Web Application Firewall) rules.
 * **Vulnerability:** Data Leakage from RDS.
     * *Mitigation:* Enable RDS Encryption at rest using AWS KMS and ensure the DB is in a private subnet.
+# Security Strategy (Principle of Least Privilege)
+
+## 🛡️ Security Groups (SGs) Logic
+The architecture follows a strict "chain of trust" where each tier only accepts traffic from the tier directly above it.
+
+### 1. Web-Tier-SG (Public)
+* **Description**: Entry point for users.
+* **Inbound**: 
+    * HTTP (Port 80) from `0.0.0.0/0`
+    * HTTPS (Port 443) from `0.0.0.0/0`
+* **Purpose**: Allows public web traffic to reach the Load Balancer.
+
+### 2. App-Tier-SG (Private)
+* **Description**: Backend logic layer.
+* **Inbound**: 
+    * Custom TCP (Port 5000) from **Web-Tier-SG** (Source = SG ID)
+* **Purpose**: Ensures only our web server can talk to our app server.
+
+### 3. Database-Tier-SG (Private)
+* **Description**: Data storage layer.
+* **Inbound**: 
+    * PostgreSQL (Port 5432) from **App-Tier-SG** (Source = SG ID)
+* **Purpose**: Completely isolates data from the internet.
