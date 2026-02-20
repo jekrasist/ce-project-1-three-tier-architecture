@@ -1,1 +1,8 @@
-
+VPC ID: vpc-01a5c53a9c128f7f4
+Subnet ID's:
+Public-1a: subnet-0eacd68e537ca62d5
+Public-1b: subnet-0f1da0512c08236da
+Private-subnet-1a: subnet-0f50bff3621e648eb
+Private-subnet-1b: subnet-0b3c45772019e9cce
+Private-db-1a: subnet-0dc48ef86cc64160f
+Private-db-1b: subnet-0266bec9e6030e7f5
