@@ -70,3 +70,13 @@ The architecture follows a strict "chain of trust" where each tier only accepts 
 * **Inbound**: 
     * PostgreSQL (Port 5432) from **App-Tier-SG** (Source = SG ID)
 * **Purpose**: Completely isolates data from the internet.
+
+
+
+## ✅ Security Group Implementation
+
+| Name | Purpose | Inbound Rules | Outbound Rules |
+| :--- | :--- | :--- | :--- |
+| **Web-SG** | Load Balancer | Port 80/443 (0.0.0.0/0) | All traffic to App-SG |
+| **App-SG** | App Instances | Port 5000 (from Web-SG) | All traffic to DB-SG |
+| **DB-SG** | RDS Database | Port 5432 (from App-SG) | None (Locked) |
